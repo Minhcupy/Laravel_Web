@@ -22,6 +22,7 @@
             flex-direction: column;
             min-height: 100vh;
             margin: 0;
+            background-color: #f8fbff;
         }
 
         main {
@@ -29,14 +30,14 @@
         }
 
         .navbar {
-            background: linear-gradient(90deg, #0d6efd, #3a8efc);
+            background: linear-gradient(90deg, #1e88e5, #42a5f5) !important;
         }
 
         .nav-link:hover,
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(244, 67, 54, 0.8) !important;
             border-radius: 6px;
-            transition: 0.2s;
+            transition: all 0.3s ease;
         }
 
         .custom-dropdown {
@@ -46,8 +47,8 @@
         }
 
         .custom-dropdown .dropdown-item:hover {
-            background-color: #e3f2fd;
-            color: #0d6efd;
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
             border-radius: 6px;
             transition: all 0.2s;
             padding-left: 20px;
@@ -64,6 +65,58 @@
                 transform: translateY(0);
             }
         }
+
+        /* Button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #1e88e5, #42a5f5);
+            border: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #f44336, #e53935);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-outline-primary {
+            color: #1e88e5;
+            border-color: #1e88e5;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #f44336;
+            border-color: #f44336;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #e53935);
+            border: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #d32f2f, #c62828);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .card {
+            border-radius: 15px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -73,7 +126,7 @@
         <div class="container">
             {{-- Logo không có link --}}
             <span class="navbar-brand d-flex align-items-center fw-bold text-white">
-                <i class="bi bi-shop me-2 text-white"></i> Mimi Shop
+                <i class="bi bi-trophy me-2 text-white"></i> VợtPro - Vợt Cầu Lông Chuyên Nghiệp
             </span>
 
             <div>

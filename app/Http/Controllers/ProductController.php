@@ -33,7 +33,7 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(8)->withQueryString();
 
         return view('shop.index', compact('products', 'categories'));
     }

@@ -5,8 +5,8 @@
 
     {{-- Nút quay lại --}}
     <div class="mb-4">
-        <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">
-            <i class="bi bi-arrow-left"></i> Quay lại danh sách
+        <a class="btn btn-outline-primary" href="{{ route('shop.index') }}">
+            <i class="bi bi-arrow-left"></i> Quay lại cửa hàng
         </a>
     </div>
 
@@ -19,142 +19,154 @@
                     <img src="{{ asset('storage/' . $product->image) }}"
                         alt="{{ $product->name }}"
                         class="img-fluid rounded-3 shadow-sm"
-                        style="max-height: 380px; object-fit: cover;">
+                        style="max-height: 400px; object-fit: contain;">
                 @else
-                    <img src="{{ asset('images/no-image.png') }}"
-                        alt="No image"
+                    <img src="https://via.placeholder.com/400x400/1e88e5/ffffff?text=🏸"
+                        alt="Vợt cầu lông"
                         class="img-fluid rounded-3 shadow-sm"
-                        style="max-height: 380px; object-fit: cover;">
+                        style="max-height: 400px; object-fit: contain;">
                 @endif
             </div>
 
             {{-- Thông tin --}}
             <div class="col-md-7 p-4">
-                <h2 class="fw-bold">{{ $product->name }}</h2>
-                <p class="text-muted">{{ $product->description ?: 'Không có mô tả' }}</p>
+                <h1 class="fw-bold text-primary mb-3">🏸 {{ $product->name }}</h1>
+                <p class="text-muted fs-6 mb-4">{{ $product->description ?: 'Vợt cầu lông chuyên nghiệp, chất lượng cao' }}</p>
 
-                <h4 class="text-danger fw-bold mb-3">
-                    {{ number_format($product->price, 0, ',', '.') }} VNĐ
-                </h4>
+                {{-- Giá --}}
+                <div class="mb-4">
+                    @if($product->promotion)
+                    <div class="d-flex align-items-center gap-3">
+                        <h2 class="text-danger fw-bold mb-0">
+                            {{ number_format($product->discounted_price, 0, ',', '.') }}đ
+                        </h2>
+                        <span class="text-muted text-decoration-line-through fs-5">
+                            {{ number_format($product->price, 0, ',', '.') }}đ
+                        </span>
+                        <span class="badge bg-danger fs-6">
+                            -{{ $product->promotion->discount_percentage }}%
+                        </span>
+                    </div>
+                    @else
+                    <h2 class="text-primary fw-bold">
+                        {{ number_format($product->price, 0, ',', '.') }}đ
+                    </h2>
+                    @endif
+                </div>
 
-                <p><span class="badge bg-success fs-6">Tồn kho: {{ $product->stock }} sản phẩm</span></p>
-                <p><span class="badge bg-primary fs-6">Danh mục: {{ $product->category->name ?? 'N/A' }}</span></p>
+                {{-- Thông tin chi tiết --}}
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <p class="mb-2"><strong>Tồn kho:</strong> 
+                            @if($product->stock > 0)
+                            <span class="badge bg-success">{{ $product->stock }} cái</span>
+                            @else
+                            <span class="badge bg-danger">Hết hàng</span>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-2"><strong>Danh mục:</strong> 
+                            <span class="badge bg-primary">{{ $product->category->name ?? 'N/A' }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Nút mua hàng --}}
+                @auth
+                @if($product->stock > 0)
+                <div class="row g-2">
+                    <div class="col-6">
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                            @csrf
+                            <button class="btn btn-primary w-100 btn-lg">
+                                🛒 Thêm vào giỏ
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-6">
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                            @csrf
+                            <button class="btn btn-danger w-100 btn-lg">
+                                ⚡ Mua ngay
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @else
+                <button class="btn btn-secondary w-100 btn-lg" disabled>Hết hàng</button>
+                @endif
+                @else
+                <a href="{{ route('login') }}" class="btn btn-primary w-100 btn-lg">
+                    Đăng nhập để mua hàng
+                </a>
+                @endauth
             </div>
         </div>
     </div>
 
-    {{-- Đánh giá sản phẩm --}}
+    {{-- Đánh giá sản phẩm (Gọn) --}}
     <div class="card shadow-sm border-0 p-4 rounded-4">
-        <h4 class="mb-4"><i class="bi bi-star-fill text-warning"></i> Đánh giá sản phẩm</h4>
+        <h4 class="mb-3"><i class="bi bi-star-fill text-warning"></i> Đánh giá ({{ $total ?? 0 }})</h4>
 
-        @php
-            $average = $product->reviews->avg('rating');
-            $total = $product->reviews->count();
-            $ratingStats = $product->reviews->groupBy('rating')->map->count();
-        @endphp
-
-        {{-- Tổng quan --}}
-        @if($total > 0)
-        <div class="row mb-4">
-            <div class="col-md-3 text-center">
-                <h1 class="text-warning fw-bold">{{ number_format($average, 1) }}</h1>
-                <div class="mb-2">
-                    @for($i=1; $i<=5; $i++)
-                        <i class="bi {{ $i <= round($average) ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}"></i>
-                    @endfor
-                </div>
-                <small class="text-muted">{{ $total }} đánh giá</small>
-            </div>
-            <div class="col-md-9">
-                @for($i = 5; $i >= 1; $i--)
-                    @php
-                        $count = $ratingStats[$i] ?? 0;
-                        $percent = $total > 0 ? round(($count / $total) * 100) : 0;
-                    @endphp
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="me-2">{{ $i }} <i class="bi bi-star-fill text-warning"></i></span>
-                        <div class="progress flex-grow-1" style="height: 10px;">
-                            <div class="progress-bar bg-warning" role="progressbar"
-                                style="width: {{ $percent }}%;"
-                                aria-valuenow="{{ $percent }}" aria-valuemin="0" aria-valuemax="100">
-                            </div>
-                        </div>
-                        <span class="ms-2 text-muted small">{{ $count }} ({{ $percent }}%)</span>
-                    </div>
+        @if(($total ?? 0) > 0)
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="d-flex align-items-center">
+                <span class="fs-3 fw-bold text-warning me-2">{{ number_format($average ?? 0, 1) }}</span>
+                @for($i=1; $i<=5; $i++)
+                    <i class="bi {{ $i <= round($average ?? 0) ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}"></i>
                 @endfor
             </div>
+            <span class="text-muted">({{ $total }} đánh giá)</span>
         </div>
-        @else
-            <p class="text-muted">Chưa có đánh giá nào.</p>
         @endif
 
-        {{-- Form thêm đánh giá --}}
+        {{-- Form đánh giá nhanh --}}
         @auth
-        <form action="{{ route('reviews.store', $product->id) }}" method="POST" class="mb-4">
+        <form action="{{ route('reviews.store', $product->id) }}" method="POST" class="row g-2 mb-4">
             @csrf
-            <div class="row g-2">
-                <div class="col-md-2">
-                    <select name="rating" class="form-select">
-                        @for($i = 5; $i >= 1; $i--)
-                            <option value="{{ $i }}">⭐ {{ $i }} Sao</option>
-                        @endfor
-                    </select>
-                </div>
-                <div class="col-md-8">
-                    <textarea name="comment" class="form-control" rows="1" placeholder="Viết đánh giá của bạn..."></textarea>
-                </div>
-                <div class="col-md-2 d-grid">
-                    <button class="btn btn-primary"><i class="bi bi-send"></i> Gửi</button>
-                </div>
+            <div class="col-md-2">
+                <select name="rating" class="form-select" required>
+                    <option value="">Chọn sao</option>
+                    @for($i = 5; $i >= 1; $i--)
+                        <option value="{{ $i }}">{{ $i }} ⭐</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="col-md-8">
+                <input type="text" name="comment" class="form-control" placeholder="Viết đánh giá ngắn gọn..." required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Gửi</button>
             </div>
         </form>
         @else
-            <p><a href="{{ route('login') }}">Đăng nhập</a> để viết đánh giá.</p>
+        <p class="text-muted mb-4">
+            <a href="{{ route('login') }}" class="text-decoration-none">Đăng nhập</a> để đánh giá sản phẩm
+        </p>
         @endauth
 
-        {{-- Danh sách đánh giá --}}
-        <div>
-            @foreach($product->reviews as $review)
-                <div class="border rounded-3 p-3 mb-3 bg-light">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($review->user->name) }}&background=random"
-                            class="rounded-circle me-2" width="40" height="40" alt="avatar">
-                        <div>
-                            <strong>{{ $review->user->name }}</strong>
-                            <div>
-                                @for($i=1; $i<=5; $i++)
-                                    <i class="bi {{ $i <= $review->rating ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}"></i>
-                                @endfor
-                            </div>
-                        </div>
-                        <span class="ms-auto text-muted small">{{ $review->created_at->diffForHumans() }}</span>
+        {{-- Danh sách đánh giá ngắn gọn --}}
+        @if(isset($product->reviews) && $product->reviews->count() > 0)
+        <div class="review-list" style="max-height: 300px; overflow-y: auto;">
+            @foreach($product->reviews->take(5) as $review)
+            <div class="border-bottom pb-2 mb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>{{ $review->user->name ?? 'Khách hàng' }}</strong>
+                    <div class="d-flex align-items-center gap-2">
+                        @for($i=1; $i<=5; $i++)
+                            <i class="bi {{ $i <= $review->rating ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}" style="font-size: 12px;"></i>
+                        @endfor
+                        <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
                     </div>
-                    <p class="mb-2">{{ $review->comment }}</p>
-
-                    {{-- Nút sửa & xóa --}}
-                    @auth
-                        @if(Auth::id() === $review->user_id || Auth::user()->role === 'admin')
-                            <div class="mt-2">
-                                <a href="{{ route('reviews.edit', $review->id) }}" class="btn btn-sm btn-outline-primary me-1">
-                                    <i class="bi bi-pencil"></i> Sửa
-                                </a>
-                                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" class="d-inline"
-                                    onsubmit="return confirm('Bạn chắc chắn muốn xóa đánh giá này?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i> Xóa
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
-                    @endauth
                 </div>
+                <p class="text-muted small mb-0">{{ $review->comment }}</p>
+            </div>
             @endforeach
         </div>
+        @else
+        <p class="text-muted">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá!</p>
+        @endif
     </div>
 </div>
-
-{{-- Bootstrap Icons --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @endsection
