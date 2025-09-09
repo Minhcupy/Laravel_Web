@@ -19,7 +19,7 @@ class CartController extends Controller
     }
 
     // Thêm sản phẩm vào giỏ
-    public function add($id)
+    public function add(Request $request, $id)
     {
         $product = Product::with('promotion')->findOrFail($id);
         $cart = session()->get('cart', []);
@@ -31,6 +31,9 @@ class CartController extends Controller
             if ($cart[$id]['quantity'] < $product->stock) {
                 $cart[$id]['quantity']++;
             } else {
+                if ($request->ajax()) {
+                    return response()->json(['error' => 'Số lượng vượt quá tồn kho!'], 400);
+                }
                 return back()->with('error', 'Số lượng vượt quá tồn kho!');
             }
         } else {
@@ -47,8 +50,17 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => 'Đã thêm vào giỏ!',
+                'cart_count' => collect($cart)->sum('quantity')
+            ]);
+        }
+
         return redirect()->route('cart.index')->with('success', 'Đã thêm vào giỏ!');
     }
+
 
     // Cập nhật số lượng
     public function update(Request $request, $id)

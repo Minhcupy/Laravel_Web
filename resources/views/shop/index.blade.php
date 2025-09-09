@@ -133,30 +133,59 @@
 
                     {{-- Nút thao tác --}}
                     <div class="mt-auto">
-                        <a href="{{ route('products.show', $product->id) }}"
-                            class="btn btn-outline-info w-100 mb-2">
-                            Xem chi tiết
-                        </a>
+                        <div class="d-flex gap-2">
 
-                        @auth
-                        @if($product->stock > 0)
-                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                            @csrf
-                            <button class="btn btn-primary w-100">Thêm vào giỏ</button>
-                        </form>
-                        @else
-                        <button class="btn btn-secondary w-100" disabled>Hết hàng</button>
-                        @endif
-                        @else
-                        <a href="{{ route('login') }}" class="btn btn-secondary w-100">
-                            Đăng nhập để mua
-                        </a>
-                        @endauth
+                            {{-- Nút xem chi tiết --}}
+                            <a href="{{ route('products.show', $product->id) }}"
+                                class="btn btn-outline-info flex-fill">
+                                <i class="bi bi-eye"></i> <span class="d-none d-md-inline">Chi tiết</span>
+                            </a>
+
+                            {{-- Nút thêm vào giỏ --}}
+                            @auth
+                            @if($product->stock > 0)
+                            <button class="btn btn-outline-primary flex-fill d-flex align-items-center justify-content-center add-to-cart"
+                                data-id="{{ $product->id }}">
+                                <i class="bi bi-cart3"></i>
+                                <span class="ms-1 d-none d-md-inline">Giỏ hàng</span>
+                            </button>
+                            @else
+                            <button class="btn btn-secondary flex-fill" disabled>
+                                <i class="bi bi-cart-x"></i> Hết hàng
+                            </button>
+                            @endif
+                            @else
+                            <a href="{{ route('login') }}" class="btn btn-outline-secondary flex-fill">
+                                <i class="bi bi-cart3"></i> <span class="d-none d-md-inline">Giỏ hàng</span>
+                            </a>
+                            @endauth
+
+                            {{-- Nút mua ngay --}}
+                            @auth
+                            @if($product->stock > 0)
+                            <button class="btn btn-primary flex-fill buy-now"
+                                data-id="{{ $product->id }}">
+                                Mua ngay
+                            </button>
+                            @else
+                            <button class="btn btn-secondary flex-fill" disabled>Mua ngay</button>
+                            @endif
+                            @else
+                            <a href="{{ route('login') }}" class="btn btn-primary flex-fill">
+                                Mua ngay
+                            </a>
+                            @endauth
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
         @endforeach
     </div>
+    <div class="d-flex justify-content-center mt-4">
+        {{ $products->links('pagination::bootstrap-5') }}
+    </div>
+
 </div>
 @endsection
