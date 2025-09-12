@@ -47,7 +47,7 @@
     </div>
 
     {{-- Bảng Child Categories --}}
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-bold">📂 Child Categories</h2>
     </div>
 
@@ -82,7 +82,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> -->
 
 </div>
 @endsection
