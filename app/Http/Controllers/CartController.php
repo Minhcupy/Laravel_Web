@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvoiceMail;
 
 class CartController extends Controller
 {
@@ -24,24 +26,26 @@ class CartController extends Controller
         $product = Product::with('promotion')->findOrFail($id);
         $cart = session()->get('cart', []);
 
+        $quantity = max(1, (int) $request->quantity); // lấy số lượng từ request
+        if ($quantity > $product->stock) {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Số lượng vượt quá tồn kho!'], 400);
+            }
+            return back()->with('error', 'Số lượng vượt quá tồn kho!');
+        }
+
         $price = $product->price;
         $discountPrice = $product->discounted_price;
 
         if (isset($cart[$id])) {
-            if ($cart[$id]['quantity'] < $product->stock) {
-                $cart[$id]['quantity']++;
-            } else {
-                if ($request->ajax()) {
-                    return response()->json(['error' => 'Số lượng vượt quá tồn kho!'], 400);
-                }
-                return back()->with('error', 'Số lượng vượt quá tồn kho!');
-            }
+            $newQty = min($cart[$id]['quantity'] + $quantity, $product->stock);
+            $cart[$id]['quantity'] = $newQty;
         } else {
             $cart[$id] = [
                 "name"           => $product->name,
                 "price"          => $price,
                 "discount_price" => $discountPrice,
-                "quantity"       => 1,
+                "quantity"       => $quantity,
                 "stock"          => $product->stock,
                 "image"          => $product->image,
                 "promotion_id"   => $product->promotion->id ?? null,
@@ -60,6 +64,7 @@ class CartController extends Controller
 
         return redirect()->route('cart.index')->with('success', 'Đã thêm vào giỏ!');
     }
+
 
 
     // Cập nhật số lượng
@@ -123,7 +128,7 @@ class CartController extends Controller
                     'order_id'   => $order->id,
                     'product_id' => $id,
                     'quantity'   => $item['quantity'],
-                    'price'      => $item['discount_price'], // giá đã giảm
+                    'price'      => $item['discount_price'],
                     'promotion_id' => $item['promotion_id'] ?? null,
                 ]);
 
@@ -137,8 +142,12 @@ class CartController extends Controller
             DB::commit();
             session()->forget('cart');
 
+            // 🔹 Gửi email
+            $user = Auth::user();
+            Mail::to($user->email)->send(new InvoiceMail($order));
+
             return redirect()->route('orders.show', $order->id)
-                ->with('success', 'Đặt hàng thành công!');
+                ->with('success', 'Đặt hàng thành công! Hóa đơn đã được gửi đến email của bạn.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());

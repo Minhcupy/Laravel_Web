@@ -31,8 +31,10 @@
         }
 
         .navbar {
-            background: linear-gradient(90deg, #0d6efd, #3a8efc);
+            background-color: #0b5ed7 !important;
+            /* xanh primary đậm */
         }
+
 
         .nav-link:hover,
         .nav-link.active {
@@ -55,6 +57,38 @@
             padding-left: 20px;
         }
 
+        /* Dropdown con */
+/* Dropdown con hover */
+/* Dropdown con hiển thị bên phải */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;          /* xuất hiện sát bên phải cha */
+    margin-left: 0;      /* loại bỏ khoảng cách mặc định */
+    border-radius: 0.375rem; /* bo góc giống dropdown cha */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* shadow giống cha */
+}
+
+/* Bỏ mũi tên nhỏ */
+.dropdown-submenu > .dropdown-menu .dropdown-item::after {
+    content: none !important;
+}
+
+/* Hover để menu con xuất hiện */
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Animation giống cha */
+.dropdown-submenu > .dropdown-menu {
+    animation: fadeInDown 0.25s ease-in-out;
+}
+
+
+
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -66,7 +100,6 @@
                 transform: translateY(0);
             }
         }
-        
     </style>
 </head>
 
@@ -75,15 +108,19 @@
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4">
         <div class="container">
             {{-- Logo không có link --}}
-            <span class="navbar-brand d-flex align-items-center fw-bold text-white">
-                <i class="bi bi-shop me-2 text-white"></i> Mimi Shop
-            </span>
+            <a class="navbar-brand d-flex align-items-center fw-bold text-white" href="{{ route('shop.index') }}">
+                <img src="{{ asset('img/Logoweb.png') }}"
+                    alt="Mimi Shop Logo"
+                    class="me-2"
+                    style="height:45px; width:auto;">
+            </a>
+
 
             <div>
                 <ul class="navbar-nav align-items-center">
 
                     {{-- Form tìm kiếm --}}
-                    <form action="{{ route('shop.index') }}" method="GET" class="d-flex mx-auto"
+                    <form action="{{ route('shop.index') }}#product-section" method="GET" class="d-flex mx-auto"
                         style="max-width: 500px; flex:1;">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control rounded-pill ps-3"
@@ -110,24 +147,36 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                             Danh mục sản phẩm
                         </a>
-                        <ul class="dropdown-menu custom-dropdown shadow-lg border-0 mt-2 rounded-3"
-                            aria-labelledby="navbarDropdown">
-                            @php
-                            $categories = App\Models\Category::all();
-                            @endphp
-                            @forelse($categories as $category)
-                            <li>
-                                <a class="dropdown-item py-2 px-3 fw-semibold hover-item
-                                        {{ request('category') == $category->id ? 'active bg-light text-primary' : '' }}"
-                                    href="{{ route('shop.index', ['category' => $category->id]) }}">
-                                    <i class="bi bi-chevron-right small me-2 text-primary"></i>
-                                    {{ $category->TenDM ?? $category->name }}
-                                </a>
-                            </li>
-                            @empty
-                            <li><span class="dropdown-item text-muted">Chưa có danh mục</span></li>
-                            @endforelse
-                        </ul>
+                       <ul class="dropdown-menu custom-dropdown shadow-lg border-0 mt-2 rounded-3" aria-labelledby="navbarDropdown">
+    @php
+        $categories = App\Models\Category::whereNull('parent_id')->with('children')->get();
+    @endphp
+
+    @forelse($categories as $category)
+        <li class="dropdown-submenu">
+            <a class="dropdown-item py-2 px-3 fw-semibold {{ request()->query('category') == $category->id ? 'active bg-light text-primary' : '' }}"
+               href="{{ route('shop.index', ['category' => $category->id]) }}#product-section">
+                <i class="bi bi-chevron-right small me-2 text-primary"></i> {{ $category->name }}
+            </a>
+
+            @if($category->children->count())
+                <ul class="dropdown-menu">
+                    @foreach($category->children as $child)
+                        <li>
+                            <a class="dropdown-item py-2 px-3 {{ request()->query('category') == $child->id ? 'active bg-light text-primary' : '' }}"
+                               href="{{ route('shop.index', ['category' => $child->id]) }}#product-section">
+                                {{ $child->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </li>
+    @empty
+        <li><span class="dropdown-item text-muted">Chưa có danh mục</span></li>
+    @endforelse
+</ul>
+
                     </li>
 
                     {{-- Admin Dashboard --}}
@@ -135,7 +184,7 @@
                     @if(Auth::user()->role === 'admin')
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('dashboard') }}">
-                         Dashboard
+                            Dashboard
                         </a>
                     </li>
                     @endif
@@ -211,69 +260,67 @@
     @include('layouts.footer')
 
     {{-- Toast giỏ hàng --}}
-<div class="toast-container position-fixed top-0 end-0 p-3" style="margin-top:70px; z-index:2000;">
-    <div id="cart-toast" class="toast align-items-center text-bg-success border-0 shadow" role="alert">
-        <div class="d-flex">
-            <div class="toast-body fw-bold">
-                Đã thêm vào giỏ hàng!
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="margin-top:70px; z-index:2000;">
+        <div id="cart-toast" class="toast align-items-center text-bg-success border-0 shadow" role="alert">
+            <div class="d-flex">
+                <div class="toast-body fw-bold">
+                    Đã thêm vào giỏ hàng!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
-</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Thêm vào giỏ
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-        btn.addEventListener('click', function() {
-            let productId = this.dataset.id;
+   <script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Giữ nguyên code cũ xử lý giỏ hàng...
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Tìm thẻ bao quanh sản phẩm
+        let productCard = this.closest('.card') || this.closest('.product-card');
 
-            fetch(`/cart/add/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('cart-count').innerText = data.cart_count;
-                    let toastEl = document.getElementById('cart-toast');
-                    let toast = new bootstrap.Toast(toastEl);
-                    toast.show();
-                } else {
-                    alert(data.error);
-                }
-            });
-        });
-    });
+        // Nếu không tìm thấy, mặc định quantity = 1
+        let quantity = 1;
 
-    // Mua ngay
-    document.querySelectorAll('.buy-now').forEach(btn => {
-        btn.addEventListener('click', function() {
-            let productId = this.dataset.id;
+        if(productCard) {
+            let quantityInput = productCard.querySelector('input[type="number"]');
+            if(quantityInput) {
+                quantity = parseInt(quantityInput.value) || 1;
+            }
+        }
 
-            fetch(`/cart/add/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = "/cart"; // chuyển sang giỏ hàng
-                } else {
-                    alert(data.error);
-                }
-            });
+        fetch(`/cart/add/${this.dataset.id}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ quantity })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('cart-count').innerText = data.cart_count;
+                let toast = new bootstrap.Toast(document.getElementById('cart-toast'));
+                toast.show();
+            } else {
+                alert(data.error ?? 'Có lỗi xảy ra!');
+            }
         });
     });
 });
+
+    // ✅ Scroll tới sản phẩm nếu có #product-section
+    if (window.location.hash === "#product-section") {
+        let el = document.querySelector("#product-section");
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+});
 </script>
+
 
 
 </body>

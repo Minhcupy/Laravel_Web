@@ -14,6 +14,7 @@
         <thead>
             <tr>
                 <th>Sản phẩm</th>
+                <th>Size</th>
                 <th>Số lượng</th>
                 <th>Giá</th>
                 <th>Thành tiền</th>
@@ -22,7 +23,8 @@
         <tbody>
             @foreach ($order->items as $item)
                 <tr>
-                    <td>{{ $item->product->name }}</td>
+                    <td>{{ $item->product->name ?? 'Sản phẩm đã xóa' }}</td>
+                    <td>{{ $item->size ?? '—' }}</td>
                     <td>{{ $item->quantity }}</td>
                     <td>{{ number_format($item->price, 0, ',', '.') }} VNĐ</td>
                     <td>{{ number_format($item->price * $item->quantity, 0, ',', '.') }} VNĐ</td>

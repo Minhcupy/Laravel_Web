@@ -6,8 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = [ 'user_id', 'name', 'phone', 'address', 'total',
-    'payment_method', 'status'];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'phone',
+        'address',
+        'total',
+        'payment_method',
+        'status'
+    ];
 
     // Định nghĩa các trạng thái chuẩn
     const STATUS_CART      = 'cart';
@@ -36,5 +43,20 @@ class Order extends Model
     public function getStatusTextAttribute()
     {
         return self::getStatusText($this->status);
+    }
+
+    // Order.php
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // trong Order.php
+
+
+    // trong OrderItem.php
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }
