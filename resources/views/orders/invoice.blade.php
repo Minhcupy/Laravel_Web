@@ -1,6 +1,15 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hóa đơn #{{ $order->id }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; font-size: 14px; }
+        table th, table td { vertical-align: middle; }
+    </style>
+</head>
+<body>
 <div class="container py-4">
     <h2 class="mb-4">🧾 Hóa đơn đơn hàng #{{ $order->id }}</h2>
 
@@ -36,4 +45,5 @@
         <button onclick="window.print()" class="btn btn-primary">🖨️ In hóa đơn</button>
     </div>
 </div>
-@endsection
+</body>
+</html>
