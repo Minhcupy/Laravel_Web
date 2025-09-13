@@ -5,7 +5,7 @@
 
     {{-- Nút quay lại --}}
     <div class="mb-4">
-        <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">
+        <a class="btn btn-outline-secondary" href="{{ route('admin.products.index') }}">
             <i class="bi bi-arrow-left"></i> Quay lại danh sách
         </a>
     </div>

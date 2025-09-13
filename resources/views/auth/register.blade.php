@@ -1,52 +1,65 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+@extends('layouts.app')
+@section('title', 'Đăng ký tài khoản')
+@section('content')
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%; border-radius: 1rem;">
+        <div class="text-center mb-4">
+            <span style="display:inline-block;width:80px;height:80px;background:#e3f2fd;border-radius:50%;box-shadow:0 0 10px #1e88e5;">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" style="margin-top:10px;" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="30" cy="20" rx="18" ry="7" fill="#1e88e5"/>
+                    <rect x="22" y="32" width="16" height="6" rx="3" fill="#42a5f5" transform="rotate(-25 22 32)"/>
+                    <rect x="36" y="40" width="10" height="4" rx="2" fill="#1565c0" transform="rotate(-10 36 40)"/>
+                    <circle cx="30" cy="20" r="3" fill="#fff" stroke="#1565c0" stroke-width="2"/>
+                </svg>
+            </span>
+            <h2 class="fw-bold text-primary mt-3 mb-1">Đăng ký Mimi Shop</h2>
+            <p class="text-muted mb-0">Tạo tài khoản để mua vợt cầu lông và nhận ưu đãi!</p>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+            <div class="mb-3">
+                <label for="name" class="form-label fw-semibold text-primary">Họ và tên</label>
+                <input type="text" name="name" id="name" class="form-control rounded-pill" value="{{ old('name') }}" required autofocus autocomplete="name">
+                @error('name')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold text-primary">Email</label>
+                <input type="email" name="email" id="email" class="form-control rounded-pill" value="{{ old('email') }}" required autocomplete="username">
+                @error('email')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label fw-semibold text-primary">Mật khẩu</label>
+                <input type="password" name="password" id="password" class="form-control rounded-pill" required autocomplete="new-password">
+                @error('password')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+            </div>
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label fw-semibold text-primary">Nhập lại mật khẩu</label>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control rounded-pill" required autocomplete="new-password">
+                @error('password_confirmation')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+            </div>
+<button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2">
+                <i class="bi bi-person-plus me-1"></i> Đăng ký
+            </button>
+        </form>
+        <div class="text-center mt-3">
+            <span class="text-muted">Đã có tài khoản?</span>
+            <a href="{{ route('login') }}" class="text-primary fw-semibold">Đăng nhập ngay</a>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</div>
+<style>
+body {
+    background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%);
+}
+.card {
+    border: none;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #1e88e5 60%, #42a5f5 100%);
+    border: none;
+}
+.btn-primary:hover {
+    background: #1565c0;
+}
+</style>
+@endsection

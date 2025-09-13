@@ -7,7 +7,7 @@
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">📦 Quản lý sản phẩm</h2>
-        <a href="{{ route('products.create') }}" class="btn btn-success shadow-sm">
+        <a href="{{ route('admin.products.create') }}" class="btn btn-success">
             <i class="bi bi-plus-circle me-1"></i> Thêm sản phẩm
         </a>
     </div>
@@ -35,14 +35,14 @@
                             <td class="fw-semibold">#{{ $product->id }}</td>
                             <td>
                                 @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                        alt="{{ $product->name }}"
-                                        width="60" height="60"
-                                        class="rounded shadow-sm border">
+                                <img src="{{ asset('storage/' . $product->image) }}"
+                                    alt="{{ $product->name }}"
+                                    width="60" height="60"
+                                    class="rounded shadow-sm border">
                                 @else
-                                    <img src="https://via.placeholder.com/60"
-                                        alt="No image"
-                                        class="rounded shadow-sm border">
+                                <img src="https://via.placeholder.com/60"
+                                    alt="No image"
+                                    class="rounded shadow-sm border">
                                 @endif
                             </td>
                             <td class="text-start">{{ $product->name }}</td>
@@ -50,9 +50,9 @@
                             <td class="fw-bold text-danger">{{ number_format($product->price, 0, ',', '.') }} ₫</td>
                             <td>
                                 @if($product->stock > 0)
-                                    <span class="badge bg-success">{{ $product->stock }}</span>
+                                <span class="badge bg-success">{{ $product->stock }}</span>
                                 @else
-                                    <span class="badge bg-danger">Hết hàng</span>
+                                <span class="badge bg-danger">Hết hàng</span>
                                 @endif
                             </td>
                             <td>{{ $product->category->name ?? 'N/A' }}</td>
@@ -61,13 +61,13 @@
                                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-info">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-warning">
+                                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-outline-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form action="{{ route('products.destroy', $product->id) }}" 
-                                          method="POST" 
-                                          onsubmit="return confirm('Xoá sản phẩm này?')" 
-                                          class="d-inline">
+                                    <form action="{{ route('admin.products.destroy', $product->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Xoá sản phẩm này?')"
+                                        class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-outline-danger">

@@ -532,7 +532,7 @@
                         @endif
                     </p>
                     <div class="mt-auto d-flex gap-2">
-                        <a href="{{ route('products.show',$product->id) }}" class="btn btn-outline-info flex-fill">
+                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-info flex-fill">
                             <i class="bi bi-eye me-1"></i> Chi tiết
                         </a>
                         @auth

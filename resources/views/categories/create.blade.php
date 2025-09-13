@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
     <h2>Create New Category</h2>
-    <a class="btn btn-primary mb-2" href="{{ route('categories.index') }}">Back</a>
+    <a class="btn btn-primary mb-2" href="{{ route('admin.categories.index') }}">Back</a>
 
-    <form action="{{ route('categories.store') }}" method="POST">
+    <form action="{{ route('admin.categories.store') }}" method="POST">
         @csrf
 
         <div class="mb-3">

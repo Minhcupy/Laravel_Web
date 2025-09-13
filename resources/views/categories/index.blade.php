@@ -8,7 +8,7 @@
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">📂 Quản lý danh mục</h2>
-        <a href="{{ route('categories.create') }}" class="btn btn-success shadow-sm">
+        <a href="{{ route('admin.categories.create') }}" class="btn btn-success shadow-sm">
             <i class="bi bi-plus-circle me-1"></i> Thêm danh mục
         </a>
     </div>
@@ -41,15 +41,15 @@
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <a href="{{ route('categories.show', $category) }}" 
+                                    <a href="{{ route('admin.categories.show', $category) }}" 
                                        class="btn btn-outline-info">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('categories.edit', $category) }}" 
+                                    <a href="{{ route('admin.categories.edit', $category) }}" 
                                        class="btn btn-outline-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form action="{{ route('categories.destroy', $category) }}" 
+                                    <form action="{{ route('admin.categories.destroy', $category) }}" 
                                           method="POST" 
                                           onsubmit="return confirm('Bạn có chắc chắn muốn xoá?')">
                                         @csrf
@@ -100,15 +100,15 @@
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <a href="{{ route('categories.show', $child) }}" 
+                                    <a href="{{ route('admin.categories.show', $child) }}" 
                                        class="btn btn-outline-info">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('categories.edit', $child) }}" 
+                                    <a href="{{ route('admin.categories.edit', $child) }}" 
                                        class="btn btn-outline-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form action="{{ route('categories.destroy', $child) }}" 
+                                    <form action="{{ route('admin.categories.destroy', $child) }}" 
                                           method="POST" 
                                           onsubmit="return confirm('Bạn có chắc chắn muốn xoá?')">
                                         @csrf

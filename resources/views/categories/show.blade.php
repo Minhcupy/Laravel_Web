@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h2>Show Category</h2>
-    <a class="btn btn-primary mb-2" href="{{ route('categories.index') }}">Back</a>
+    <a class="btn btn-primary mb-2" href="{{ route('admin.categories.index') }}">Back</a>
 
     <div class="mb-2">
         <strong>Name:</strong> {{ $category->name }}
@@ -20,7 +20,7 @@
             @foreach($category->children as $child)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ $child->name }}
-                    <a href="{{ route('categories.show', $child) }}" class="btn btn-sm btn-info">View</a>
+                    <a href="{{ route('admin.categories.show', $child) }}" class="btn btn-sm btn-info">View</a>
                 </li>
             @endforeach
         </ul>

@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
     <h2>Edit Category</h2>
-    <a class="btn btn-primary mb-3" href="{{ route('categories.index') }}">Back</a>
+    <a class="btn btn-primary mb-3" href="{{ route('admin.categories.index') }}">Back</a>
 
-    <form action="{{ route('categories.update', $category->id) }}" method="POST">
+    <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
         @csrf
         @method('PUT')
 
