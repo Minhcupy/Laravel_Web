@@ -16,16 +16,16 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\ShopController;
 // routes/web.php
 
-use Illuminate\Support\Facades\Mail;
+// use Illuminate\Support\Facades\Mail;
 
-Route::get('/test-mail', function () {
-    Mail::raw('Đây là email test từ Mimi Shop', function ($message) {
-        $message->to('tqmminh2004tqm@gmail.com') // email nhận
-                ->subject('Test Email Mimi Shop');
-    });
+// Route::get('/test-mail', function () {
+//     Mail::raw('Đây là email test từ Mimi Shop', function ($message) {
+//         $message->to('tqmminh2004tqm@gmail.com') // email nhận
+//                 ->subject('Test Email Mimi Shop');
+//     });
 
-    return 'Email đã gửi! Kiểm tra hộp thư đến.';
-});
+//     return 'Email đã gửi! Kiểm tra hộp thư đến.';
+// });
 
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
@@ -44,7 +44,7 @@ Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.s
 Route::get('/checkout/invoice/{id}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
 Route::post('/checkout/vnpay', [CheckoutController::class, 'vnpayPayment'])->name('checkout.vnpay');
 Route::get('/checkout/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('checkout.vnpay.return');
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+// Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy']);
@@ -75,7 +75,7 @@ Route::middleware(['auth', CheckRole::class . ':admin'])
 
 // CRUD cho admin
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
-    Route::resource('products', ProductController::class)->except(['show']);
+    Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
 });
 
