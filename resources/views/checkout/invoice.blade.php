@@ -63,25 +63,42 @@
                 </thead>
                 <tbody>
                     @foreach ($order->items as $item)
-                        <tr>
-                            <td class="text-start">
-                                <div class="d-flex align-items-center">
-                                    @if($item->product && $item->product->image)
-                                        <img src="{{ asset('storage/' . $item->product->image) }}"
-                                            alt="{{ $item->product->name }}"
-                                            class="rounded shadow-sm me-2"
-                                            style="width:50px;height:50px;object-fit:cover;">
-                                    @endif
-                                    <span>{{ $item->product->name ?? 'Sản phẩm đã xóa' }}</span>
-                                </div>
-                            </td>
-                            <td>{{ $item->size ?? '—' }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ number_format($item->price, 0, ',', '.') }} VNĐ</td>
-                            <td class="fw-bold text-success">
-                                {{ number_format($item->price * $item->quantity, 0, ',', '.') }} VNĐ
-                            </td>
-                        </tr>
+                    @php
+                    // Ưu tiên lấy discounted_price nếu có, không thì lấy price
+                    $unitPrice = $item->discounted_price ?? $item->price;
+                    $line = $unitPrice * $item->quantity;
+                    @endphp
+                    <tr>
+                        <td class="text-start">
+                            <div class="d-flex align-items-center">
+                                @if($item->product && $item->product->image)
+                                <img src="{{ asset('storage/' . $item->product->image) }}"
+                                    alt="{{ $item->product->name }}"
+                                    class="rounded shadow-sm me-2"
+                                    style="width:50px;height:50px;object-fit:cover;">
+                                @endif
+                                <span>{{ $item->product->name ?? 'Sản phẩm đã xóa' }}</span>
+                            </div>
+                        </td>
+                        <td>{{ $item->size ?? '—' }}</td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>
+                            @if(isset($item->discounted_price) && $item->discounted_price < $item->price)
+                                <span class="text-danger fw-bold">
+                                    {{ number_format($item->discounted_price, 0, ',', '.') }} VNĐ
+                                </span>
+                                <br>
+                                <small class="text-muted text-decoration-line-through">
+                                    {{ number_format($item->price, 0, ',', '.') }} VNĐ
+                                </small>
+                                @else
+                                {{ number_format($item->price, 0, ',', '.') }} VNĐ
+                                @endif
+                        </td>
+                        <td class="fw-bold text-success">
+                            {{ number_format($line, 0, ',', '.') }} VNĐ
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="table-light">

@@ -22,10 +22,10 @@
                             <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('products.index') }}">Products</a>
+                            <a class="nav-link" href="{{ route('admin.products.index') }}">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
+                            <a class="nav-link" href="{{ route('admin.categories.index') }}">Categories</a>
                         </li>
                     @endif
                 @endauth

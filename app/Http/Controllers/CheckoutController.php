@@ -53,7 +53,7 @@ class CheckoutController extends Controller
         }
 
         // Tính tổng
-        $total = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
+        $total = array_sum(array_map(fn($i) => ($i['discounted_price'] ?? $i['price']) * $i['quantity'], $cart));
 
         // Tạo order
         $order = Order::create([
@@ -74,7 +74,8 @@ class CheckoutController extends Controller
                 'order_id'   => $order->id,
                 'product_id' => $id,
                 'quantity'   => $item['quantity'],
-                'price'      => $item['price']
+                'price'      => $item['price'],
+                'discounted_price'=> $item['discounted_price'] ?? null, // giá giảm
             ]);
 
             $product->decrement('stock', $item['quantity']);

@@ -8,7 +8,7 @@
         <div class="alert alert-success">
             Thanh toán thành công! Mã đơn hàng: {{ $orderId }}
         </div>
-        <a href="{{ route('products.index') }}" class="btn btn-success">Tiếp tục mua hàng</a>
+        <a href="{{ route('admin.products.index') }}" class="btn btn-success">Tiếp tục mua hàng</a>
     @else
         <div class="alert alert-danger">
             Thanh toán thất bại. Mã lỗi: {{ $vnp_ResponseCode }}
