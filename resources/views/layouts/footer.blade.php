@@ -8,7 +8,7 @@
                     <div class="footer-section">
                         <div class="footer-logo mb-4">
                             <img src="{{ asset('img/Logoweb.png') }}" alt="Laravel Shop" class="footer-logo-img">
-                            <h4 class="footer-brand-name">Laravel Shop</h4>
+                            <h4 class="footer-brand-name">Shop VN</h4>
                         </div>
                         <p class="footer-description">
                             Chúng tôi chuyên cung cấp các sản phẩm thể thao chất lượng cao với dịch vụ uy tín,

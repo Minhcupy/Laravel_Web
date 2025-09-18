@@ -659,14 +659,14 @@
                 </li>
                 @else
                 <li class="page-item">
-                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                    <a class="page-link" href="{{ $url }}#product-section">{{ $page }}</a>
                 </li>
                 @endif
                 @endforeach
 
                 @if ($products->hasMorePages())
                 <li class="page-item">
-                    <a class="page-link" href="{{ $products->nextPageUrl() }}" rel="next">
+                    <a class="page-link" href="{{ $products->nextPageUrl() }}#product-section" rel="next">
                         <i class="bi bi-chevron-right"></i>
                     </a>
                 </li>

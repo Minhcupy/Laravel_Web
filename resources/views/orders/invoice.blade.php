@@ -26,6 +26,10 @@
             font-weight: 700;
             color: #0d6efd;
         }
+        .shop-info {
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
         table th {
             background: #e9ecef;
         }
@@ -36,6 +40,26 @@
             font-size: 16px;
             font-weight: bold;
             color: #dc3545;
+        }
+        .signatures {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-block {
+            width: 45%;
+            text-align: center;
+        }
+        .signature-block p {
+            margin: 0;
+            font-style: italic;
+        }
+        .signature-line {
+            margin-top: 60px;
+            border-top: 1px solid #000;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
         }
         @media print {
             body {
@@ -56,16 +80,23 @@
     <div class="invoice-box">
         {{-- Header --}}
         <div class="invoice-header d-flex justify-content-between align-items-center">
-            <h2>🧾 HÓA ĐƠN</h2>
+            <div>
+                <h2>🧾 HÓA ĐƠN</h2>
+                <div class="shop-info">
+                    <strong>Mimi Shop</strong><br>
+                    <span>Chuyên các loại vợt cầu lông</span><br>
+                    <span>Địa chỉ: 123 Nguyễn Trãi, Hà Nội</span>
+                </div>
+            </div>
             <span class="text-muted">Mã đơn: #{{ $order->id }}</span>
         </div>
 
         {{-- Thông tin khách hàng --}}
         <div class="mb-3">
-            <p><strong>📅 Ngày đặt:</strong> {{ $order->created_at->format('d/m/Y H:i') }}</p>
+            <p><strong>📅 Ngày mua hàng:</strong> {{ $order->created_at->format('d/m/Y H:i') }}</p>
             <p><strong>👤 Khách hàng:</strong> {{ $order->name }}</p>
             <p><strong>📞 Điện thoại:</strong> {{ $order->phone }}</p>
-            <p><strong>🏠 Địa chỉ:</strong> {{ $order->address }}</p>
+            <p><strong>🏠 Địa chỉ giao hàng:</strong> {{ $order->address }}</p>
         </div>
 
         {{-- Bảng sản phẩm --}}
@@ -94,6 +125,21 @@
         <div class="d-flex justify-content-end mt-3">
             <div class="total">
                 Tổng tiền: {{ number_format($order->total, 0, ',', '.') }} ₫
+            </div>
+        </div>
+
+        {{-- Chữ ký --}}
+        <div class="signatures">
+            <div class="signature-block">
+                <p><strong>Khách hàng</strong></p>
+                <p>(Ký và ghi rõ họ tên)</p>
+                <div class="signature-line"></div>
+            </div>
+            <div class="signature-block">
+                <p><strong>Người bán hàng</strong></p>
+                <p>(Ký và ghi rõ họ tên)</p>
+                <div class="signature-line"></div>
+                <p><em>Mimi Shop</em></p>
             </div>
         </div>
 
