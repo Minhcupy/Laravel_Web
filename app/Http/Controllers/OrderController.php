@@ -133,6 +133,13 @@ class OrderController extends Controller
         return view('orders.my', compact('orders'));
     }
 
+    public function invoice(Order $order)
+    {
+        $order->load('items.product'); // không load 'user' nếu không có quan hệ user
+        return view('orders.invoice', compact('order')); // trỏ tới orders.invoice
+    }
+
+
     public function cancel(Order $order)
     {
         if ($order->user_id !== Auth::id() || $order->status !== 'pending') {

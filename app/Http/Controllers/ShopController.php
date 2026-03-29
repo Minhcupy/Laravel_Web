@@ -27,8 +27,7 @@ class ShopController extends Controller
         }
 
         // Phân trang
-        $products = $query->paginate(9)->withQueryString();
-
+        $products = $query->paginate(8)->withQueryString();
         return view('shop.index', compact('products', 'categories'));
     }
 }

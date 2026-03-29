@@ -14,6 +14,19 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\ShopController;
+// routes/web.php
+
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-mail', function () {
+    Mail::raw('Đây là email test từ Mimi Shop', function ($message) {
+        $message->to('tqmminh2004tqm@gmail.com') // email nhận
+                ->subject('Test Email Mimi Shop');
+    });
+
+    return 'Email đã gửi! Kiểm tra hộp thư đến.';
+});
+
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 
@@ -31,10 +44,11 @@ Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.s
 Route::get('/checkout/invoice/{id}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
 Route::post('/checkout/vnpay', [CheckoutController::class, 'vnpayPayment'])->name('checkout.vnpay');
 Route::get('/checkout/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('checkout.vnpay.return');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy']);
-        Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.my');
+    Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.my');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 });
 
@@ -61,7 +75,7 @@ Route::middleware(['auth', CheckRole::class . ':admin'])
 
 // CRUD cho admin
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)->except(['show']);
     Route::resource('categories', CategoryController::class);
 });
 
@@ -82,8 +96,7 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->group
     Route::post('/reports/filter', [ReportController::class, 'filter'])->name('reports.filter');
     // Route::post('/reports/filter', [ReportController::class, 'filter'])->name('admin.reports.filter');
     Route::get('admin/reports/print', [\App\Http\Controllers\ReportController::class, 'print'])
-    ->name('admin.reports.print');
-
+        ->name('admin.reports.print');
 });
 
 
@@ -91,6 +104,7 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->group
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice'])->name('admin.orders.invoice');
 });
 
 
