@@ -5,10 +5,10 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Thêm sản phẩm</h2>
-    <a href="{{ route('products.index') }}" class="btn btn-secondary">⬅ Trở về</a>
+    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">⬅ Trở về</a>
 </div>
 
-<form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">
         <label for="name" class="form-label">Tên sản phẩm</label>

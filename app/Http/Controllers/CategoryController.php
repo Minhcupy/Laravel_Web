@@ -15,16 +15,18 @@ class CategoryController extends Controller
 
     public function create()
     {
-        return view('categories.create');
+        $categories = Category::all(); // Lấy danh sách danh mục hiện có
+        return view('categories.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:categories,id', // cho phép chọn danh mục cha
         ]);
 
-        Category::create($request->only('name'));
+        Category::create($request->only('name', 'parent_id'));
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
@@ -43,9 +45,10 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:categories,id',
         ]);
 
-        $category->update($request->only('name'));
+        $category->update($request->only('name', 'parent_id'));
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }

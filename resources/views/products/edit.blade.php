@@ -4,13 +4,13 @@
 <div class="container">
     <h2 class="mb-4">Edit Product</h2>
 
-    <a class="btn btn-secondary mb-3" href="{{ route('products.index') }}">
+    <a class="btn btn-secondary mb-3" href="{{ route('admin.products.index') }}">
         ← Back to Products
     </a>
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

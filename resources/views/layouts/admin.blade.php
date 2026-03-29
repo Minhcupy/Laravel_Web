@@ -58,28 +58,28 @@
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
-            <a href="{{ route('products.index') }}" class="nav-link {{ request()->is('products*') ? 'active' : '' }}">
-                <i class="bi bi-box-seam"></i> Products
+            <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->is('admin/products*') ? 'active' : '' }}">
+                <i class="bi bi-box-seam"></i> Quản lý sản phẩm
             </a>
-            <a href="{{ route('categories.index') }}" class="nav-link {{ request()->is('categories*') ? 'active' : '' }}">
-                <i class="bi bi-tags"></i> Categories
+            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->is('admin/categories*') ? 'active' : '' }}">
+                <i class="bi bi-tags"></i> Quản lý danh mục
             </a>
             <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->is('admin/orders*') ? 'active' : '' }}">
-                <i class="bi bi-cart-check"></i> Orders
+                <i class="bi bi-cart-check"></i> Quản lý đơn hàng
             </a>
             <a href="{{ route('admin.reports.index') }}" class="nav-link {{ request()->is('admin/reports*') ? 'active' : '' }}">
-                <i class="bi bi-bar-chart-line"></i> Reports
+                <i class="bi bi-bar-chart-line"></i> Quản lý báo cáo
             </a>
             <a href="{{ route('promotions.index') }}" class="nav-link {{ request()->is('promotions*') ? 'active' : '' }}">
-                <i class="bi bi-gift"></i> Promotions
+                <i class="bi bi-gift"></i> Quản lý khuyến mại
             </a>
             <a href="{{ route('reviews.index') }}" class="nav-link">
-                <i class="bi bi-chat-dots"></i> Reviews
+                <i class="bi bi-chat-dots"></i> Quản lý đánh giá
             </a>
         </nav>
         <form action="{{ route('logout') }}" method="POST" class="mt-auto p-3">
             @csrf
-            <button class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            <button class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
         </form>
     </div>
 

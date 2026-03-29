@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -33,10 +34,22 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $products = $query->paginate(12)->withQueryString();
+        // Phân trang tất cả sản phẩm
+        $products = $query->paginate(8)->withQueryString();
 
-        return view('shop.index', compact('products', 'categories'));
+        // Lấy 4 sản phẩm nổi bật dựa trên số lượng bán (order_items)
+        $featuredProducts = Product::with('promotion', 'category')
+            ->withCount(['orderItems as sold' => function ($q) {
+                $q->select(DB::raw("SUM(quantity)"));
+            }])
+            ->orderByDesc('sold')
+            ->take(4)
+            ->get();
+
+        return view('shop.index', compact('products', 'categories', 'featuredProducts'));
     }
+
+
 
 
 
@@ -66,7 +79,7 @@ class ProductController extends Controller
 
         Product::create($data);
 
-        return redirect()->route('products.index')->with('success', 'Product created.');
+        return redirect()->route('admin.products.index')->with('success', 'Product created.');
     }
 
     // ================== Xem chi tiết sản phẩm ==================
@@ -117,7 +130,7 @@ class ProductController extends Controller
 
         $product->update($data);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
     }
 
     // ================== ADMIN: Xóa sản phẩm ==================
@@ -129,6 +142,6 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted.');
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted.');
     }
 }
